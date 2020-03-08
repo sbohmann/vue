@@ -1,0 +1,16 @@
+.calculator {
+    font-family: monospace;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.calculator button {
+    background: aliceblue;
+    width: 60px;
+    height: 50px;
+    font-size: 35px;
+}
+
+.calculator_display {
+    text-align: right;
+}
