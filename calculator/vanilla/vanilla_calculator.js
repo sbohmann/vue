@@ -18,35 +18,45 @@ function calculator(mainElement) {
         add_button(row, column, button)
     }
 
-    let table = document.createElement('table')
-    table.classList.add('calculator')
-    let display_tr = document.createElement('tr')
-    let display_td = document.createElement('td')
-    display_td.colSpan = 4
-    display_td.classList.add('calculator_display')
-    let display_text = document.createTextNode(value.toString())
-    display_td.appendChild(display_text)
-    display_tr.appendChild(display_td)
-    table.appendChild(display_tr)
-
+    let display_text = text(value)
     function numberPressed(n) {
         value = (value * 10) + n
         display_text.textContent = value.toString()
     }
 
+    let table = element('table',
+        element('tr',
+            display(display_text)))
+    table.classList.add('calculator')
     for (let row of rows) {
-        let tr = document.createElement('tr')
+        let tr = element('tr')
         for (let buttonDescription of row) {
-            let td = document.createElement('td')
-            let button = document.createElement('button')
-            button.appendChild(document.createTextNode(buttonDescription.n.toString()))
+            let button = element('button', text(buttonDescription.n))
             button.onclick = () => { numberPressed(buttonDescription.n) }
-            td.appendChild(button)
-            tr.appendChild(td)
+            tr.appendChild(element('td', button))
         }
         table.appendChild(tr)
     }
     mainElement.appendChild(table)
+}
+
+function display(text) {
+    let result = element('td', text)
+    result.colSpan = 4
+    result.classList.add('calculator_display')
+    return result
+}
+
+function element(type, ... childElements) {
+    let result = document.createElement(type)
+    for (let childElement of childElements) {
+        result.appendChild(childElement)
+    }
+    return result
+}
+
+function text(value) {
+    return document.createTextNode(value.toString())
 }
 
 calculator(document.getElementById('main_calculator'))
