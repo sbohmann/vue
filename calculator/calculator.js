@@ -1,9 +1,11 @@
 Vue.component('calculator', {
-    props: ['value', 'c'],
+    props: {
+        initial_value: { type: Number, default: 0}
+    },
     data() {
         function number(n) {
             console.log(n)
-            this.display_text = n
+            this.value = (this.value * 10) + n
         }
 
         let rows = [[], [], []]
@@ -11,23 +13,21 @@ Vue.component('calculator', {
             let button = {
                 n,
                 row: 2 - Math.trunc((n - 1) / 3),
-                column: (n - 1) % 3,
-                action() {
-                    number(n)
-                }
+                column: (n - 1) % 3
             }
             rows[button.row].push(button)
         }
-        return {rows, number, display_text: 'Hi! ^^'}
+        console.log(this.initial_value)
+        return {rows, number, value: this.initial_value}
     },
     template: `
-        <table>
+        <table class="calculator">
             <tr>
-                <td colspan="4">{{display_text}}</td>
+                <td colspan="4" class="calculator_display">{{value}}</td>
             </tr>
             <tr v-for="row in rows">
                 <td v-for="button in row">
-                    <button v-on:click="button.action">{{button.n}}</button>
+                    <button v-on:click="number(button.n)">{{button.n}}</button>
                 </td>
             </tr>
         </table>`
