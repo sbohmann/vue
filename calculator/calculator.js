@@ -1,24 +1,31 @@
 Vue.component('calculator', {
     props: {
-        initial_value: { type: Number, default: 0}
+        initial_value: {type: Number, default: 0}
     },
     data() {
-        function number(n) {
-            console.log(n)
-            this.value = (this.value * 10) + n
+        let rows = []
+
+        function add_button(row, column, button) {
+            if (!rows[row]) {
+                rows[row] = []
+            }
+            rows[row][column] = button
         }
 
-        let rows = [[], [], []]
         for (let n = 1; n <= 9; ++n) {
-            let button = {
-                n,
-                row: 2 - Math.trunc((n - 1) / 3),
-                column: (n - 1) % 3
-            }
-            rows[button.row].push(button)
+            let row = 2 - Math.trunc((n - 1) / 3)
+            let column = (n - 1) % 3
+            let button = {n, row, column}
+            add_button(row, column, button)
         }
-        console.log(this.initial_value)
-        return {rows, number, value: this.initial_value}
+
+        return {
+            rows,
+            numberPressed(n) {
+                this.value = (this.value * 10) + n
+            },
+            value: this.initial_value
+        }
     },
     template: `
         <table class="calculator">
@@ -27,7 +34,7 @@ Vue.component('calculator', {
             </tr>
             <tr v-for="row in rows">
                 <td v-for="button in row">
-                    <button v-on:click="number(button.n)">{{button.n}}</button>
+                    <button v-on:click="numberPressed(button.n)">{{button.n}}</button>
                 </td>
             </tr>
         </table>`
